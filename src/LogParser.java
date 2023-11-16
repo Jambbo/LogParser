@@ -7,7 +7,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class LogParser implements IPQuery {
+
+public class LogParser implements IPQuery, UserQuery {
     private Path logDir;
     private List<LogEntity> logEntities = new ArrayList<>();
     private DateFormat simpleDateFormat = new SimpleDateFormat("d.M.yyyy H:m:s");
@@ -147,6 +148,145 @@ public class LogParser implements IPQuery {
             before = new Date(Long.MAX_VALUE);
         }
         return current.after(after) && current.before(before);
+    }
+
+    @Override
+    public Set<String> getAllUsers() {
+        Set<String> users = new HashSet<>();
+        for(int i=0;i<logEntities.size();i++){
+            users.add(logEntities.get(i).getUser());
+        }
+        return users;
+    }
+
+    @Override
+    public int getNumberOfUsers(Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                set.add(logEntities.get(i).getUser());
+            }
+        }
+        return set.size();
+    }
+
+    @Override
+    public int getNumberOfUserEvents(String user, Date after, Date before) {
+        Set<Event> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getUser().equals(user)){
+                    set.add(logEntities.get(i).getEvent());
+                }
+            }
+        }
+        return set.size();
+    }
+
+    @Override
+    public Set<String> getUsersForIP(String ip, Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getIp().equals(ip)){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getLoggedUsers(Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.LOGIN)){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getDownloadedPluginUsers(Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.DOWNLOAD_PLUGIN)){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getWroteMessageUsers(Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.WRITE_MESSAGE)){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getSolvedTaskUsers(Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.SOLVE_TASK)){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getSolvedTaskUsers(Date after, Date before, int task) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.SOLVE_TASK)
+                && logEntities.get(i).getEventAdditionalParameter()==task){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getDoneTaskUsers(Date after, Date before) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.DONE_TASK)){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
+    }
+
+    @Override
+    public Set<String> getDoneTaskUsers(Date after, Date before, int task) {
+        Set<String> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.DONE_TASK)
+                && logEntities.get(i).getEventAdditionalParameter()==task){
+                    set.add(logEntities.get(i).getUser());
+                }
+            }
+        }
+        return set;
     }
 
     private class LogEntity {
