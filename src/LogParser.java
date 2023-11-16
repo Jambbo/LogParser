@@ -1,11 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -156,14 +154,14 @@ public class LogParser implements IPQuery {
         private String user;
         private Date date;
         private Event event;
-        private int evenetAdditionalParameter;
+        private int eventAdditionalParameter;
         private Status status;
         public LogEntity(String ip, String user, Date date, Event event, int eventAdditionalParameter, Status status) {
             this.ip=ip;
             this.user = user;
             this.date = date;
             this.event = event;
-            this.evenetAdditionalParameter = eventAdditionalParameter;
+            this.eventAdditionalParameter = eventAdditionalParameter;
             this.status = status;
         }
 
@@ -184,7 +182,7 @@ public class LogParser implements IPQuery {
         }
 
         public int getEventAdditionalParameter() {
-            return evenetAdditionalParameter;
+            return eventAdditionalParameter;
         }
 
         public Status getStatus() {
