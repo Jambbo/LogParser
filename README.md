@@ -1,1 +1,1 @@
-LogParser
+Application to parse the logs
