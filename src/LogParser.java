@@ -352,22 +352,73 @@ public class LogParser implements IPQuery, UserQuery,DateQuery {
 
     @Override
     public Date getDateWhenUserSolvedTask(String user, int task, Date after, Date before) {
-        return null;
+        Set<Date> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getUser().equals(user)
+                &&logEntities.get(i).getEvent().equals(Event.SOLVE_TASK)){
+                    set.add(logEntities.get(i).getDate());
+                }
+            }
+        }
+        if(set.size()==0)return null;
+        Date minDate = set.iterator().next();
+        for(Date date:set){
+            if(date.getTime()<minDate.getTime()){
+                minDate=date;
+            }
+        }
+        return minDate;
     }
 
     @Override
     public Date getDateWhenUserDoneTask(String user, int task, Date after, Date before) {
-        return null;
+        Set<Date> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getUser().equals(user)
+                && logEntities.get(i).getEvent().equals(Event.DONE_TASK)
+                &&logEntities.get(i).getEventAdditionalParameter()==task){
+                    set.add(logEntities.get(i).getDate());
+                }
+            }
+        }
+        if(set.size()==0)return null;
+        Date minDate = set.iterator().next();
+        for(Date date:set){
+            if(date.getTime()<minDate.getTime()){
+                minDate = date;
+            }
+        }
+        return minDate;
     }
 
     @Override
     public Set<Date> getDatesWhenUserWroteMessage(String user, Date after, Date before) {
-        return null;
+        Set<Date> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getUser().equals(user)
+                &&logEntities.get(i).getEvent().equals(Event.WRITE_MESSAGE)){
+                    set.add(logEntities.get(i).getDate());
+                }
+            }
+        }
+        return set;
     }
 
     @Override
     public Set<Date> getDatesWhenUserDownloadedPlugin(String user, Date after, Date before) {
-        return null;
+        Set<Date> set = new HashSet<>();
+        for (int i = 0; i < logEntities.size(); i++) {
+            if(dateBetweenDates(logEntities.get(i).getDate(),after,before)){
+                if(logEntities.get(i).getEvent().equals(Event.DOWNLOAD_PLUGIN)
+                && logEntities.get(i).getUser().equals(user)){
+                    set.add(logEntities.get(i).getDate());
+                }
+            }
+        }
+        return set;
     }
 
     private class LogEntity {
